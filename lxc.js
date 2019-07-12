@@ -60,12 +60,16 @@ var LXCTools;
     }
     LXCTools.sysExec = sysExec;
 })(LXCTools = exports.LXCTools || (exports.LXCTools = {}));
+// https://github.com/lxc/lxc/issues/245
 var LXC = /** @class */ (function () {
     function LXC(sshBind) {
         this.sshBind = sshBind;
     }
     LXC.prototype.create = function (name, template) {
         return this._standardExec("lxc-create -n " + name + " -t " + template);
+    };
+    LXC.prototype.createFromDownload = function (name, distro, release, arch) {
+        return this._standardExec("lxc-create -t download -n " + name + " -- -d " + distro + " -r " + release + " -a " + arch);
     };
     LXC.prototype.destroy = function (name) {
         return this._standardExec("lxc-destroy -n " + name);

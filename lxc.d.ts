@@ -9,6 +9,7 @@ declare module 'lxc' {
 	    private sshBind?;
 	    constructor(sshBind?: string[] | undefined);
 	    create(name: string, template: string): Promise<string>;
+	    createFromDownload(name: string, distro: string, release: string, arch: string): Promise<string>;
 	    destroy(name: string): Promise<void>;
 	    start(name: string): Promise<void>;
 	    stop(name: string): Promise<void>;
@@ -77,4 +78,5 @@ declare module 'lxc' {
 	    }[]>;
 	    _standardExec(command: string): Promise<string>;
 	}
+
 }

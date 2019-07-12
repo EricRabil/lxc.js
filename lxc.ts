@@ -21,6 +21,7 @@ export namespace LXCTools {
     }
 }
 
+// https://github.com/lxc/lxc/issues/245
 export default class LXC {
     constructor(private sshBind?: string[]) {
 
@@ -28,6 +29,10 @@ export default class LXC {
 
     create(name: string, template: string): Promise<string> {
         return this._standardExec(`lxc-create -n ${name} -t ${template}`);
+    }
+
+    createFromDownload(name: string, distro: string, release: string, arch: string) {
+        return this._standardExec(`lxc-create -t download -n ${name} -- -d ${distro} -r ${release} -a ${arch}`);
     }
 
     destroy(name: string): Promise<void> {
