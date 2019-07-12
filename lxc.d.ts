@@ -5,6 +5,15 @@ declare module 'lxc' {
 	    function textToArgs(text: string): string[];
 	    function sysExec(command: string, sshBind?: string[] | false): ChildProcess;
 	}
+	export interface ContainerData {
+	    name: string;
+	    state: ContainerState;
+	    autostart: string;
+	    groups: string;
+	    ipv4: string;
+	    ipv6: string;
+	}
+	export type ContainerState = "RUNNING" | "FROZEN" | "STOPPED";
 	export default class LXC {
 	    private sshBind?;
 	    constructor(sshBind?: string[] | undefined);
@@ -68,14 +77,7 @@ declare module 'lxc' {
 	     * @param cbComplete
 	     */
 	    attach(name: string, command: string): ChildProcess;
-	    list(): Promise<{
-	        name: string;
-	        state: string;
-	        autostart: string;
-	        groups: string;
-	        ipv4: string;
-	        ipv6: string;
-	    }[]>;
+	    list(): Promise<ContainerData[]>;
 	    _standardExec(command: string): Promise<string>;
 	}
 

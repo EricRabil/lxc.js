@@ -21,6 +21,17 @@ export namespace LXCTools {
     }
 }
 
+export interface ContainerData {
+    name: string;
+    state: ContainerState;
+    autostart: string;
+    groups: string;
+    ipv4: string;
+    ipv6: string;
+}
+
+export type ContainerState = "RUNNING" | "FROZEN" | "STOPPED";
+
 // https://github.com/lxc/lxc/issues/245
 export default class LXC {
     constructor(private sshBind?: string[]) {
@@ -127,14 +138,14 @@ export default class LXC {
         return LXCTools.sysExec(`lxc-attach -n ${name} -- ${command}`, this.sshBind);
     }
 
-    async list() {
+    async list(): Promise<ContainerData[]> {
         const output = await this._standardExec('lxc-ls -f');
         return output.split("\n")
             .map(line => line.trim())
             .filter(line => line.indexOf('RUNNING') >= 0 || line.indexOf('FROZEN') >= 0 || line.indexOf('STOPPED') >= 0)
             .map(line => line.split(/\s+/gi))
             .filter(values => values.length >= 2)
-            .map(([name, state, autostart, groups, ipv4, ipv6]) => ({ name, state, autostart, groups, ipv4, ipv6 }));
+            .map(([name, state, autostart, groups, ipv4, ipv6]) => ({ name, state: state as ContainerState, autostart, groups, ipv4, ipv6 }));
     }
 
     _standardExec(command: string): Promise<string> {
