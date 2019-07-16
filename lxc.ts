@@ -134,8 +134,8 @@ export default class LXC {
      * @param command
      * @param cbComplete
      */
-    attach(name: string, command: string): ChildProcess {
-        return LXCTools.sysExec(`lxc-attach -n ${name} -- ${command}`, this.sshBind);
+    attach(name: string, command: string, env?: string): ChildProcess {
+        return LXCTools.sysExec(`${env ? `${env} ` : ''}lxc-attach --keep-env -n ${name} -- ${command}`, this.sshBind);
     }
 
     async list(): Promise<ContainerData[]> {

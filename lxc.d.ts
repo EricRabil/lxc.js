@@ -76,7 +76,7 @@ declare module 'lxc' {
 	     * @param command
 	     * @param cbComplete
 	     */
-	    attach(name: string, command: string): ChildProcess;
+	    attach(name: string, command: string, env?: string): ChildProcess;
 	    list(): Promise<ContainerData[]>;
 	    _standardExec(command: string): Promise<string>;
 	}

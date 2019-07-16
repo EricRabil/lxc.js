@@ -170,8 +170,8 @@ var LXC = /** @class */ (function () {
      * @param command
      * @param cbComplete
      */
-    LXC.prototype.attach = function (name, command) {
-        return LXCTools.sysExec("lxc-attach -n " + name + " -- " + command, this.sshBind);
+    LXC.prototype.attach = function (name, command, env) {
+        return LXCTools.sysExec((env ? env + " " : '') + "lxc-attach --keep-env -n " + name + " -- " + command, this.sshBind);
     };
     LXC.prototype.list = function () {
         return __awaiter(this, void 0, void 0, function () {
