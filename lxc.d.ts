@@ -16,7 +16,8 @@ declare module 'lxc' {
 	export type ContainerState = "RUNNING" | "FROZEN" | "STOPPED";
 	export default class LXC {
 	    private sshBind?;
-	    constructor(sshBind?: string[] | undefined);
+	    private pipeOperationsToSTDIO;
+	    constructor(sshBind?: string[] | undefined, pipeOperationsToSTDIO?: boolean);
 	    create(name: string, template: string): Promise<string>;
 	    createFromDownload(name: string, distro: string, release: string, arch: string, noValidate?: boolean): Promise<string>;
 	    destroy(name: string): Promise<void>;

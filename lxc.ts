@@ -34,7 +34,7 @@ export type ContainerState = "RUNNING" | "FROZEN" | "STOPPED";
 
 // https://github.com/lxc/lxc/issues/245
 export default class LXC {
-    constructor(private sshBind?: string[]) {
+    constructor(private sshBind?: string[], private pipeOperationsToSTDIO: boolean = false) {
 
     }
 
@@ -153,6 +153,11 @@ export default class LXC {
             let output: string = '';
             let err: string = '';
             const cp = LXCTools.sysExec(command, this.sshBind);
+            if (this.pipeOperationsToSTDIO) {
+                cp.stdout.pipe(process.stdout);
+                cp.stderr.pipe(process.stderr);
+                process.stdin.pipe(cp.stdin);
+            }
             cp.stdout.on('data', data => output += data);
             cp.stderr.on('data', data => err += data);
             cp.on('close', (code) => {

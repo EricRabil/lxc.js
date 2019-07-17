@@ -62,8 +62,10 @@ var LXCTools;
 })(LXCTools = exports.LXCTools || (exports.LXCTools = {}));
 // https://github.com/lxc/lxc/issues/245
 var LXC = /** @class */ (function () {
-    function LXC(sshBind) {
+    function LXC(sshBind, pipeOperationsToSTDIO) {
+        if (pipeOperationsToSTDIO === void 0) { pipeOperationsToSTDIO = false; }
         this.sshBind = sshBind;
+        this.pipeOperationsToSTDIO = pipeOperationsToSTDIO;
     }
     LXC.prototype.create = function (name, template) {
         return this._standardExec("lxc-create -n " + name + " -t " + template);
@@ -201,6 +203,11 @@ var LXC = /** @class */ (function () {
             var output = '';
             var err = '';
             var cp = LXCTools.sysExec(command, _this.sshBind);
+            if (_this.pipeOperationsToSTDIO) {
+                cp.stdout.pipe(process.stdout);
+                cp.stderr.pipe(process.stderr);
+                process.stdin.pipe(cp.stdin);
+            }
             cp.stdout.on('data', function (data) { return output += data; });
             cp.stderr.on('data', function (data) { return err += data; });
             cp.on('close', function (code) {
