@@ -42,8 +42,8 @@ export default class LXC {
         return this._standardExec(`lxc-create -n ${name} -t ${template}`);
     }
 
-    createFromDownload(name: string, distro: string, release: string, arch: string) {
-        return this._standardExec(`lxc-create -t download -n ${name} -- -d ${distro} -r ${release} -a ${arch}`);
+    createFromDownload(name: string, distro: string, release: string, arch: string, noValidate: boolean = false) {
+        return this._standardExec(`lxc-create -t download -n ${name} -- -d ${distro} -r ${release} -a ${arch}${noValidate ? ' --no-validate' : ''}`);
     }
 
     destroy(name: string): Promise<void> {

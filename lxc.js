@@ -68,8 +68,9 @@ var LXC = /** @class */ (function () {
     LXC.prototype.create = function (name, template) {
         return this._standardExec("lxc-create -n " + name + " -t " + template);
     };
-    LXC.prototype.createFromDownload = function (name, distro, release, arch) {
-        return this._standardExec("lxc-create -t download -n " + name + " -- -d " + distro + " -r " + release + " -a " + arch);
+    LXC.prototype.createFromDownload = function (name, distro, release, arch, noValidate) {
+        if (noValidate === void 0) { noValidate = false; }
+        return this._standardExec("lxc-create -t download -n " + name + " -- -d " + distro + " -r " + release + " -a " + arch + (noValidate ? ' --no-validate' : ''));
     };
     LXC.prototype.destroy = function (name) {
         return this._standardExec("lxc-destroy -n " + name);
